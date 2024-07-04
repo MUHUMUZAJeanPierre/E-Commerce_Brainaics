@@ -5,7 +5,25 @@ import {getOrder, createOrder} from '../controllers/orderController.js';
 const orderRouter = express.Router();
 
 orderRouter.post('/create', authMiddleware, createOrder);
-orderRouter.get('/get', authMiddleware, createOrder);
+/**
+ * @swagger
+ * tags:
+ *  name: order
+ *  description: get list of order
+ * 
+ * 
+*/
+
+/**
+ * @swagger
+ * /get
+ */
+orderRouter.get('/get', authMiddleware,getOrder);
+
+/**
+ * @swagger
+ * /get/{id}
+ */
 
 orderRouter.get('/get/:id', authMiddleware, getOrder);
 

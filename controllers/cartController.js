@@ -47,4 +47,4 @@ export const getCart = async (req, res) => {
     } catch (error) {
         res.status(500).json({ success: false, message: "Error fetching cart", error: error.message });
     }
-}
+}   
