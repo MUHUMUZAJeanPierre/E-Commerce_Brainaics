@@ -1,49 +1,43 @@
-import orderModel from "../models/orderModel.js";
-import UserModel from "../models/userMode.js"; // Corrected the typo
+import Order from '../models/orderModel.js';
 
-export const placeOrder = async (req, res) => {
+// Create Order
+export const createOrder = async (req, res) => {
     try {
-        const {userId,  items, amount, address, status, date, payment } = req.body;
-        // const userId = req.user._id;
-
-        if (!items || !amount || !address || !status || !date || !payment) {
-            return res.status(400).json({ message: 'All fields are required' });
-        }
-
-        const newOrder = new orderModel({
-            userId,
-            items,
-            amount,
-            address,
-            date,
-            status,
-            payment
-        });
-
+        const { userId, items, amount, address, status, date, payment } = req.body;
+        const newOrder = new Order({ userId, items, amount, address, status, date, payment });
         const savedOrder = await newOrder.save();
-        res.status(201).json({ message: 'Order placed successfully', order: savedOrder });
+        res.status(201).json({ message: 'Order created successfully', order: savedOrder });
     } catch (error) {
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
 
-// export const viewOrders = async (req, res) => {
-//     try {
-//         const orders = await orderModel.find({ userId: req.user._id });
-//         res.status(200).json({ orders });
-//     } catch (error) {
-//         res.status(500).json({ message: 'Server error' });
-//     }
-// };
+// View Orders
+export const getOrder = async (req, res) => {
+    try {
+        const orders = await Order.find({ userId: req.user._id });
+        if (!orders) {
+            return res.status(404).json({ message: 'No orders found' });
+        } else {
+            res.json(orders);
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
 
-// export const viewSingleOrder = async (req, res) => {
-//     try {
-//         const order = await orderModel.findById(req.params.id); // Corrected model name
-//         if (!order) {
-//             return res.status(404).json({ message: 'Order not found' });
-//         }
-//         res.status(200).json({ order });
-//     } catch (error) {
-//         res.status(500).json({ message: 'Server error' });
-//     }
-// };
+// View Single Order
+export const getOrderById = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id);
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        } else if (order.userId.toString() !== req.user._id.toString()) {
+            return res.status(401).json({ message: 'Not authorized to view this order' });
+        } else {
+            res.json(order);
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};

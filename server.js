@@ -5,7 +5,7 @@ import userRouter from './routes/userRoutes.js';
 import 'dotenv/config';
 import productRoutes from './routes/productRoutes.js';
 import cartRouter from './routes/cartRoute.js';
-// import orderRouter from './routes/orderRoute.js';
+import orderRouter from './routes/orderRoute.js';
 const app = express();
 
 
@@ -25,7 +25,7 @@ connectDB();
 app.use("/", userRouter);
 app.use("/products", productRoutes);
 app.use("/cart", cartRouter);
-// app.use("/api/order", orderRouter)
+app.use("/api/order", orderRouter)
 
 
 
